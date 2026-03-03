@@ -137,7 +137,7 @@ export const CURDPractice = () => {
         </form>
       </div>
 
-      <div className="flex w-full max-w-xl flex-col gap-2 rounded-2xl p-4 shadow-2xl">
+      <div className="flex w-full max-w-xl flex-col gap-2 rounded-2xl border border-neutral-300 p-4 shadow-2xl">
         <h2 className="mb-4 p-2 text-center font-bold">Tasks</h2>
 
         {tasks && tasks.length > 0 ? (
