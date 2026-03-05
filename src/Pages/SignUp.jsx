@@ -8,7 +8,7 @@ export const SignUp = () => {
     email: "",
     password: "",
   });
-
+  // const navigate = useNavigate();
   const handlFormSubmit = async (e) => {
     e.preventDefault();
 
@@ -21,9 +21,15 @@ export const SignUp = () => {
           data: {
             name: formData.name,
           },
+          emailRedirectTo: `${window.location.origin}/signin`,
         },
       });
-      alert("Check Your Email For Verification  !");
+      if (error) {
+        console.log(error);
+      }
+      console.log(data);
+
+      alert("Check Your Email For Verification!");
     } catch (error) {
       alert(error.message);
     }

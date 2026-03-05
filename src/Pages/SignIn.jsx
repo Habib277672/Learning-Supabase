@@ -1,16 +1,36 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-export const SignIn = () => {
+export const SignIn = ({ setToken }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handlFormSubmit = async (e) => {
     e.preventDefault();
-    console.log();
+
+    // Sign In the user with Supabase
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (error) {
+        console.log(error);
+      }
+      // console.log(data);
+
+      if (data.user.aud === "authenticated") {
+        setToken(data);
+        navigate("/");
+        alert("Congrats You Have Signed In Successfully!");
+      }
+    } catch (error) {
+      alert(error.message);
+    }
 
     // After signing clear the form
     setFormData({
