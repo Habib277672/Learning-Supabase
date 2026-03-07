@@ -6,23 +6,28 @@ import { SignUp } from "./Pages/SignUp";
 import "./App.css";
 
 const App = () => {
-  const [token, setToken] = useState(false);
-
-  if (token) {
-    sessionStorage.setItem("token", JSON.stringify(token));
-  }
+  const [token, setToken] = useState(() => {
+    const savedToken = sessionStorage.getItem("token");
+    return savedToken ? JSON.parse(savedToken) : false;
+  });
+  const [googleAuth, setGoogleAuth] = useState(false);
 
   useEffect(() => {
-    if (sessionStorage.getItem("token")) {
-      let data = JSON.parse(sessionStorage.getItem("token"));
-      setToken(data);
+    if (token) {
+      sessionStorage.setItem("token", JSON.stringify(token));
     }
-  }, []);
+  }, [token]);
+
+  useEffect(() => {
+    if (googleAuth) {
+      sessionStorage.setItem("token", JSON.stringify(googleAuth));
+    }
+  }, [googleAuth]);
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home token={token} />,
+      element: <Home token={token} googleAuth={googleAuth} />,
     },
     {
       path: "/signup",
@@ -30,7 +35,7 @@ const App = () => {
     },
     {
       path: "/signin",
-      element: <SignIn setToken={setToken} />,
+      element: <SignIn setToken={setToken} setGoogleAuth={setGoogleAuth} />,
     },
   ]);
 

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 import { NavLink, useNavigate } from "react-router-dom";
+import { FcGoogle } from "react-icons/fc";
 
-export const SignIn = ({ setToken }) => {
+export const SignIn = ({ setToken, setGoogleAuth }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -40,12 +41,25 @@ export const SignIn = ({ setToken }) => {
     });
   };
 
+  const handleGoogleSignIn = async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+    });
+
+    if (data) {
+      setGoogleAuth(data);
+      alert("Congrats You Have Signed In Successfully!");
+    } else if (error) {
+      console.log(error);
+    }
+  };
+
   return (
-    <section className="flex h-screen w-full items-center justify-center">
-      <div className="mx-auto flex h-screen w-full flex-col items-center justify-center rounded">
+    <section className="flex h-screen w-full flex-col items-center justify-center">
+      <div className="mx-auto flex h-90 w-120 flex-col items-center justify-center rounded-2xl border-2 border-neutral-300 p-5 shadow-md">
         <form
           onSubmit={handlFormSubmit}
-          className="flex h-64 w-100 flex-col gap-4 rounded-2xl border-2 border-neutral-300 p-5 shadow-md"
+          className="flex h-64 w-100 flex-col gap-4"
         >
           <h2 className="text-center text-2xl font-bold">Sign In</h2>
 
@@ -82,16 +96,34 @@ export const SignIn = ({ setToken }) => {
             Sign In
           </button>
         </form>
-        <p className="text-md mt-2">
-          Already have an Account?{" "}
-          <NavLink
-            className="text-blue-900 underline transition duration-300 hover:text-neutral-800 hover:no-underline"
-            to="/signup"
-          >
-            Sign Up
-          </NavLink>
-        </p>
+
+        {/* Divider */}
+        <div className="my-6 flex items-center">
+          <hr className="grow border-gray-300" />
+          <span className="mx-2 text-gray-400">--- or ---</span>
+          <hr className="grow border-gray-300" />
+        </div>
+
+        {/* Google Sign-In Button */}
+        <button
+          onClick={handleGoogleSignIn}
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-neutral-300 py-3 transition-colors hover:bg-gray-100"
+        >
+          <FcGoogle size={24} />
+          <span className="font-semibold text-gray-700">
+            Sign in with Google
+          </span>
+        </button>
       </div>
+      <p className="text-md mt-2">
+        Already have an Account?{" "}
+        <NavLink
+          className="text-blue-900 underline transition duration-300 hover:text-neutral-800 hover:no-underline"
+          to="/signup"
+        >
+          Sign Up
+        </NavLink>
+      </p>
     </section>
   );
 };
